@@ -22,7 +22,7 @@
 #include "./plotStyles/TriggerPerfPaperConsts.h"
 #include "./plotStyles/tdrstyle.C"
 
-int CompareAllHistos(TString input1 = "../../Ztt/ak4/output.root", TString input2 = "../../Ztt/ak5/output.root") {
+int CompareAllHistos(TString input1 = "../../ak4/output.root", TString input2 = "../../ak5/output.root") {
 	
 	gROOT->Reset();             
   //SetAtlasStyle();
@@ -32,7 +32,7 @@ int CompareAllHistos(TString input1 = "../../Ztt/ak4/output.root", TString input
   
   TString Names[2] = { input1, input2};
   
-  TString outdir = "AK4/Ztt/";
+  TString outdir = "AK4/QCD/";
   const uint nFiles = 2;
   TFile * f[nFiles];  	
 
@@ -159,7 +159,7 @@ int CompareAllHistos(TString input1 = "../../Ztt/ak4/output.root", TString input
 		 if(title_id==0) profileHist2[iProf12][1]->GetXaxis()->SetRangeUser(10,100);
 		 profileHist2[iProf12][1]->GetXaxis()->SetLabelOffset(0.1);		
 		 profileHist2[iProf12][1]->GetXaxis()->SetTitle(XTitle[title_id]);
-		 profileHist2[iProf12][1]->GetYaxis()->SetTitle("Efficiency");
+		 profileHist2[iProf12][1]->GetYaxis()->SetTitle("Fake Rate");
 		 profileHist2[iProf12][1]->SetMarkerStyle(20);
 		 profileHist2[iProf12][1]->SetMarkerSize(2);
 		 profileHist2[iProf12][1]->SetLineWidth(2);
@@ -180,7 +180,7 @@ int CompareAllHistos(TString input1 = "../../Ztt/ak4/output.root", TString input
 	     profileHist2[iProf12][1]->SetMaximum(max);
 		 
 		 histPad->cd();	
-		
+		histPad->SetLogy();
 		 profileHist2[iProf12][1]->Draw();
 		 profileHist1[iProf12][1]->Draw("same");	
 		 
@@ -203,7 +203,7 @@ int CompareAllHistos(TString input1 = "../../Ztt/ak4/output.root", TString input
 	ll->SetBorderSize(0);
 	ll->SetMargin(0.01);
 	ll->SetTextAlign(12); // align left
-	TString text = "RelValZTT";
+	TString text = "RelValQCD";
 	ll->AddText(0.01,0.7,text);
 	text = "#sqrt{s} = 13 TeV";
 	text = text + lumist;
@@ -295,7 +295,7 @@ int CompareAllHistos(TString input1 = "../../Ztt/ak4/output.root", TString input
 	ll->SetBorderSize(0);
 	ll->SetMargin(0.01);
 	ll->SetTextAlign(12); // align left
-	TString text = "RelValZTT";
+	TString text = "RelValQCD";
 	ll->AddText(0.01,0.7,text);
 	text = "#sqrt{s} = 13 TeV";
 	text = text + lumist;
@@ -384,7 +384,7 @@ for(uint iIsoSum=0; iIsoSum< nIsoSum; iIsoSum++)
 	ll->SetBorderSize(0);
 	ll->SetMargin(0.01);
 	ll->SetTextAlign(12); // align left
-	TString text = "RelValZTT";
+	TString text = "RelValQCD";
 	ll->AddText(0.01,0.7,text);
 	text = "#sqrt{s} = 13 TeV";
 	text = text + lumist;
@@ -474,7 +474,7 @@ for(uint iIsoSum=0; iIsoSum< nIsoSum; iIsoSum++)
 	ll->SetBorderSize(0);
 	ll->SetMargin(0.01);
 	ll->SetTextAlign(12); // align left
-	TString text = "RelValZTT";
+	TString text = "RelValQCD";
 	ll->AddText(0.01,0.7,text);
 	text = "#sqrt{s} = 13 TeV";
 	text = text + lumist;
@@ -563,7 +563,7 @@ for(uint iIsoSum=0; iIsoSum< nIsoSum; iIsoSum++)
 	ll->SetBorderSize(0);
 	ll->SetMargin(0.01);
 	ll->SetTextAlign(12); // align left
-	TString text = "RelValZTT";
+	TString text = "RelValQCD";
 	ll->AddText(0.01,0.7,text);
 	text = "#sqrt{s} = 13 TeV";
 	text = text + lumist;
@@ -628,7 +628,7 @@ for(uint iIsoSum=0; iIsoSum< nIsoSum; iIsoSum++)
 	ll->SetBorderSize(0);
 	ll->SetMargin(0.01);
 	ll->SetTextAlign(12); // align left
-	TString text = "RelValZTT";
+	TString text = "RelValQCD";
 	ll->AddText(0.01,0.7,text);
 	text = "#sqrt{s} = 13 TeV";
 	text = text + lumist;
@@ -641,6 +641,7 @@ for(uint iIsoSum=0; iIsoSum< nIsoSum; iIsoSum++)
 	    c2->Print(outdir+"png/"+isoSumProfile2D1[iIsoSum][1]->GetName()+Sumsuffix[iFile]+".png");
 	}
  }
+ TString Ztitle[2]={"Neutral isolation ratio","Charged isolation ratio"};
  
  for(uint iIsoSum=0; iIsoSum< nIsoSumProfile; iIsoSum++)
 	{
@@ -665,7 +666,7 @@ for(uint iIsoSum=0; iIsoSum< nIsoSum; iIsoSum++)
 	ll->SetBorderSize(0);
 	ll->SetMargin(0.01);
 	ll->SetTextAlign(12); // align left
-	TString text = "RelValZTT";
+	TString text = "RelValQCD";
 	ll->AddText(0.01,0.7,text);
 	text = "#sqrt{s} = 13 TeV";
 	text = text + lumist;
@@ -677,8 +678,7 @@ for(uint iIsoSum=0; iIsoSum< nIsoSum; iIsoSum++)
 		c2->Print(outdir+"pdf/"+isoSumProfile2D2[iIsoSum][1]->GetName()+".pdf");
 	    c2->Print(outdir+"png/"+isoSumProfile2D2[iIsoSum][1]->GetName()+".png");
 	    
-	 
-	  TProfile2D* h_diff2=(TProfile2D*)isoSumProfile2D1[iIsoSum][1]->Clone();
+	    TProfile2D* h_diff2=(TProfile2D*)isoSumProfile2D1[iIsoSum][1]->Clone();
 		h_diff2->Divide(isoSumProfile2D1[iIsoSum][0]);
 		h_diff2->RebinY(2);
 		h_diff2->GetZaxis()->SetRangeUser(0.7,1.3);
@@ -699,6 +699,9 @@ for(uint iIsoSum=0; iIsoSum< nIsoSum; iIsoSum++)
 		c2->Print(outdir+"pdf/"+isoSumProfile2D2[iIsoSum][1]->GetName()+"_ratio.pdf");
 	    c2->Print(outdir+"png/"+isoSumProfile2D2[iIsoSum][1]->GetName()+"_ratio.png");
 	    
+		
 	}
+	
+	
 	return 0;
 }
