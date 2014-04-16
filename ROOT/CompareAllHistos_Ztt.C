@@ -165,7 +165,7 @@ int CompareAllHistos(TString input1 = "../../Ztt/ak4/output.root", TString input
 		leg->SetTextSize(0.035);
 		leg->SetBorderSize(0);
 		
-		leg->AddEntry(profileHist1[iProf12][0], "AK4", "lp");
+		leg->AddEntry(profileHist1[iProf12][0], "AK4+iso05", "lp");
 		leg->AddEntry(profileHist1[iProf12][1], "AK5", "lp");
 		
 		leg->Draw();
@@ -259,7 +259,7 @@ int CompareAllHistos(TString input1 = "../../Ztt/ak4/output.root", TString input
 						leg->SetTextSize(0.035);
 						leg->SetBorderSize(0);
 						
-						leg->AddEntry(profileHist[i123][iWP*nProfile+iProf123][0], "AK4", "lp");
+						leg->AddEntry(profileHist[i123][iWP*nProfile+iProf123][0], "AK4+iso05", "lp");
 						leg->AddEntry(profileHist[i123][iWP*nProfile+iProf123][1], "AK5", "lp");
 						
 						leg->Draw();

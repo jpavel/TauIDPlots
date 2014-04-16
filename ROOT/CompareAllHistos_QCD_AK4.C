@@ -180,7 +180,7 @@ int CompareAllHistos(TString input1 = "../../ak4/output.root", TString input2 = 
 	     profileHist2[iProf12][1]->SetMaximum(max);
 		 
 		 histPad->cd();	
-		histPad->SetLogy();
+		 histPad->SetLogy();
 		 profileHist2[iProf12][1]->Draw();
 		 profileHist1[iProf12][1]->Draw("same");	
 		 
@@ -247,6 +247,9 @@ int CompareAllHistos(TString input1 = "../../ak4/output.root", TString input2 = 
 		 isoSumHist2[iIsoSum][iFile]->Rebin(20);
 		 isoSumHist1[iIsoSum][iFile]->Rebin(20);
 	//~ 
+	     isoSumHist2[iIsoSum][iFile]->Scale(1./isoSumHist2[iIsoSum][iFile]->Integral());
+	     isoSumHist1[iIsoSum][iFile]->Scale(1./isoSumHist1[iIsoSum][iFile]->Integral());
+	     
 	
 		 isoSumHist2[iIsoSum][iFile]->GetXaxis()->SetRangeUser(0,20);
 		 isoSumHist2[iIsoSum][iFile]->GetXaxis()->SetLabelOffset(0.1);		
@@ -337,19 +340,19 @@ for(uint iIsoSum=0; iIsoSum< nIsoSum; iIsoSum++)
 		 isoSumHist1[iIsoSum][1]->GetXaxis()->SetRangeUser(0,20);
 		 isoSumHist1[iIsoSum][1]->GetXaxis()->SetLabelOffset(0.1);		
 		 isoSumHist1[iIsoSum][1]->GetXaxis()->SetTitle(XTitleSum[iIsoSum]);
-		 isoSumHist1[iIsoSum][1]->SetMarkerStyle(20);
-		 isoSumHist1[iIsoSum][1]->SetMarkerSize(2);
-		 isoSumHist1[iIsoSum][1]->SetMarkerColor(kBlack);
-		 isoSumHist1[iIsoSum][1]->SetLineWidth(2);
-		 isoSumHist1[iIsoSum][1]->SetLineColor(kBlack);
-		 isoSumHist1[iIsoSum][1]->SetLineStyle(0);
-		 
-		 isoSumHist1[iIsoSum][0]->SetMarkerColor(kRed);
-		 isoSumHist1[iIsoSum][0]->SetMarkerStyle(25);
+		 isoSumHist1[iIsoSum][0]->SetMarkerStyle(20);
 		 isoSumHist1[iIsoSum][0]->SetMarkerSize(2);
+		 isoSumHist1[iIsoSum][0]->SetMarkerColor(kBlack);
 		 isoSumHist1[iIsoSum][0]->SetLineWidth(2);
-		 isoSumHist1[iIsoSum][0]->SetLineStyle(2);
-		 isoSumHist1[iIsoSum][0]->SetLineColor(kRed);
+		 isoSumHist1[iIsoSum][0]->SetLineColor(kBlack);
+		 isoSumHist1[iIsoSum][0]->SetLineStyle(0);
+		 
+		 isoSumHist1[iIsoSum][1]->SetMarkerColor(kRed);
+		 isoSumHist1[iIsoSum][1]->SetMarkerStyle(25);
+		 isoSumHist1[iIsoSum][1]->SetMarkerSize(2);
+		 isoSumHist1[iIsoSum][1]->SetLineWidth(2);
+		 isoSumHist1[iIsoSum][1]->SetLineStyle(2);
+		 isoSumHist1[iIsoSum][1]->SetLineColor(kRed);
 		
 		 int binmax = isoSumHist1[iIsoSum][1]->GetMaximumBin();
 	     double max = 1.05*(isoSumHist1[iIsoSum][1]->GetBinContent(binmax)+isoSumHist1[iIsoSum][1]->GetBinError(binmax));
@@ -364,14 +367,16 @@ for(uint iIsoSum=0; iIsoSum< nIsoSum; iIsoSum++)
 		
 		 isoSumHist1[iIsoSum][1]->Draw();
 		 isoSumHist1[iIsoSum][0]->Draw("same");	
+		 isoSumHist1[iIsoSum][1]->Draw("same");
 		 
 		TLegend* leg = new TLegend(0.8,0.80,0.9,0.9,NULL,"brNDC");
 		leg->SetFillColor(0);
 		leg->SetTextSize(0.035);
 		leg->SetBorderSize(0);
 		
-		leg->AddEntry(isoSumHist1[iIsoSum][1], legendRerun[1], "lp");
+		
 		leg->AddEntry(isoSumHist1[iIsoSum][0], legendRerun[0], "lp");
+		leg->AddEntry(isoSumHist1[iIsoSum][1], legendRerun[1], "lp");
 		
 		leg->Draw();
 		 //~ 
@@ -409,6 +414,8 @@ for(uint iIsoSum=0; iIsoSum< nIsoSum; iIsoSum++)
     h_diff->GetXaxis()->SetLabelOffset(0.01);
     h_diff->GetXaxis()->SetTitleSize(0.15);
 	h_diff->GetYaxis()->SetNdivisions(509);
+	h_diff->SetLineColor(kBlack);
+	h_diff->SetLineStyle(0);
 	h_diff->SetMinimum(0.5);
 	h_diff->SetMaximum(2.05);
 	
@@ -515,20 +522,20 @@ for(uint iIsoSum=0; iIsoSum< nIsoSum; iIsoSum++)
 		 //isoSumProfile1[iIsoSum][1]->GetXaxis()->SetRangeUser(0,20);
 		 isoSumProfile1[iIsoSum][1]->GetXaxis()->SetLabelOffset(0.1);		
 		 isoSumProfile1[iIsoSum][1]->GetXaxis()->SetTitle(XTitleProfileSum[iIsoSum]);
-		 isoSumProfile1[iIsoSum][1]->SetMarkerStyle(20);
-		 isoSumProfile1[iIsoSum][1]->SetMarkerSize(2);
-		 isoSumProfile1[iIsoSum][1]->SetMarkerColor(kBlack);
-		 isoSumProfile1[iIsoSum][1]->SetLineColor(kBlack);
-		 isoSumProfile1[iIsoSum][1]->SetLineWidth(2);
-		 isoSumProfile1[iIsoSum][1]->SetLineStyle(0);
-		 
-		 
-		 isoSumProfile1[iIsoSum][0]->SetMarkerColor(kRed);
-		 isoSumProfile1[iIsoSum][0]->SetMarkerStyle(25);
+		 isoSumProfile1[iIsoSum][0]->SetMarkerStyle(20);
 		 isoSumProfile1[iIsoSum][0]->SetMarkerSize(2);
+		 isoSumProfile1[iIsoSum][0]->SetMarkerColor(kBlack);
+		 isoSumProfile1[iIsoSum][0]->SetLineColor(kBlack);
 		 isoSumProfile1[iIsoSum][0]->SetLineWidth(2);
-		 isoSumProfile1[iIsoSum][0]->SetLineStyle(2);
-		 isoSumProfile1[iIsoSum][0]->SetLineColor(kRed);
+		 isoSumProfile1[iIsoSum][0]->SetLineStyle(0);
+		 
+		 
+		 isoSumProfile1[iIsoSum][1]->SetMarkerColor(kRed);
+		 isoSumProfile1[iIsoSum][1]->SetMarkerStyle(25);
+		 isoSumProfile1[iIsoSum][1]->SetMarkerSize(2);
+		 isoSumProfile1[iIsoSum][1]->SetLineWidth(2);
+		 isoSumProfile1[iIsoSum][1]->SetLineStyle(2);
+		 isoSumProfile1[iIsoSum][1]->SetLineColor(kRed);
 		
 		 int binmax = isoSumProfile1[iIsoSum][1]->GetMaximumBin();
 	     double max = 1.05*(isoSumProfile1[iIsoSum][1]->GetBinContent(binmax)+isoSumProfile1[iIsoSum][1]->GetBinError(binmax));
@@ -543,14 +550,16 @@ for(uint iIsoSum=0; iIsoSum< nIsoSum; iIsoSum++)
 		
 		 isoSumProfile1[iIsoSum][1]->Draw();
 		 isoSumProfile1[iIsoSum][0]->Draw("same");	
+		 isoSumProfile1[iIsoSum][1]->Draw("same");
 		 
 		TLegend* leg = new TLegend(0.8,0.80,0.9,0.9,NULL,"brNDC");
 		leg->SetFillColor(0);
 		leg->SetTextSize(0.035);
 		leg->SetBorderSize(0);
 		
-		leg->AddEntry(isoSumProfile1[iIsoSum][1], legendRerun[1], "lp");
+		
 		leg->AddEntry(isoSumProfile1[iIsoSum][0], legendRerun[0], "lp");
+		leg->AddEntry(isoSumProfile1[iIsoSum][1], legendRerun[1], "lp");
 		
 		leg->Draw();
 		 //~ 
@@ -590,6 +599,8 @@ for(uint iIsoSum=0; iIsoSum< nIsoSum; iIsoSum++)
 	h_diff->GetYaxis()->SetNdivisions(509);
 	h_diff->SetMinimum(0.5);
 	h_diff->SetMaximum(2.05);
+	h_diff->SetLineColor(kBlack);
+	h_diff->SetLineStyle(0);
 	
 	h_diff->Draw("hist");
 	c1->Print(outdir+"pdf/"+isoSumProfile1[iIsoSum][1]->GetName()+".pdf");
@@ -641,7 +652,6 @@ for(uint iIsoSum=0; iIsoSum< nIsoSum; iIsoSum++)
 	    c2->Print(outdir+"png/"+isoSumProfile2D1[iIsoSum][1]->GetName()+Sumsuffix[iFile]+".png");
 	}
  }
- TString Ztitle[2]={"Neutral isolation ratio","Charged isolation ratio"};
  
  for(uint iIsoSum=0; iIsoSum< nIsoSumProfile; iIsoSum++)
 	{
@@ -678,7 +688,8 @@ for(uint iIsoSum=0; iIsoSum< nIsoSum; iIsoSum++)
 		c2->Print(outdir+"pdf/"+isoSumProfile2D2[iIsoSum][1]->GetName()+".pdf");
 	    c2->Print(outdir+"png/"+isoSumProfile2D2[iIsoSum][1]->GetName()+".png");
 	    
-	    TProfile2D* h_diff2=(TProfile2D*)isoSumProfile2D1[iIsoSum][1]->Clone();
+	 
+	  TProfile2D* h_diff2=(TProfile2D*)isoSumProfile2D1[iIsoSum][1]->Clone();
 		h_diff2->Divide(isoSumProfile2D1[iIsoSum][0]);
 		h_diff2->RebinY(2);
 		h_diff2->GetZaxis()->SetRangeUser(0.7,1.3);
@@ -699,9 +710,6 @@ for(uint iIsoSum=0; iIsoSum< nIsoSum; iIsoSum++)
 		c2->Print(outdir+"pdf/"+isoSumProfile2D2[iIsoSum][1]->GetName()+"_ratio.pdf");
 	    c2->Print(outdir+"png/"+isoSumProfile2D2[iIsoSum][1]->GetName()+"_ratio.png");
 	    
-		
 	}
-	
-	
 	return 0;
 }
