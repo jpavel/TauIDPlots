@@ -20,7 +20,7 @@
 #include "./plotStyles/TriggerPerfPaperConsts.h"
 #include "./plotStyles/tdrstyle.C"
 
-int CompareAllHistos(TString input1 = "../../QCD_ref.root", TString input2 = "../../QCD_filter.root", TString outdir="../plots/QCD/", TString leg1="no cut", TString leg2="jet filter", TString name="RelValQCD") {
+int CompareAllHistos(TString input1 = "../../QCD_ref.root", TString input2 = "../../QCD_filter.root", TString outdir="../plots/QCD/", TString leg1="no cut", TString leg2="jet filter", TString name="RelValQCD", bool MakeTotal=false) {
 	
 	gROOT->Reset();             
   //SetAtlasStyle();
@@ -141,44 +141,77 @@ int CompareAllHistos(TString input1 = "../../QCD_ref.root", TString input2 = "..
 			 profileHist1[iProf12][1]->Rebin(5);
 		 }
 	
-	
-		 if(title_id==0) profileHist1[iProf12][0]->GetXaxis()->SetRangeUser(0,100);
-		 profileHist1[iProf12][0]->GetXaxis()->SetLabelOffset(0.1);		
-		 profileHist1[iProf12][0]->GetXaxis()->SetTitle(XTitle[title_id]);
-		 profileHist1[iProf12][0]->GetYaxis()->SetTitle("Fake rate");
-		 profileHist1[iProf12][0]->SetMarkerStyle(20);
-		 profileHist1[iProf12][0]->SetMarkerSize(2);
-		 profileHist1[iProf12][0]->SetLineWidth(2);
+		 TH1D* baseHist = (TH1D*)profileHist1[iProf12][0]->Clone();
+		 TH1D* overHist = (TH1D*)profileHist1[iProf12][1]->Clone();
 		 
-		 profileHist1[iProf12][1]->SetMarkerColor(kRed);
-		 profileHist1[iProf12][1]->SetMarkerStyle(25);
-		 profileHist1[iProf12][1]->SetMarkerSize(2);
-		 profileHist1[iProf12][1]->SetLineWidth(2);
-		 profileHist1[iProf12][1]->SetLineStyle(2);
-		 profileHist1[iProf12][1]->SetLineColor(kRed);
+		 if(MakeTotal && iProf12>7){ 
+			 double binLow = baseHist->GetXaxis()->GetBinLowEdge(baseHist->GetXaxis()->GetFirst());
+			 double binUp = baseHist->GetXaxis()->GetBinUpEdge(baseHist->GetXaxis()->GetLast());
+			 int nBins = baseHist->GetXaxis()->GetNbins();
+			 
+			 TH1D* newBaseHist = new TH1D(TString(baseHist->GetName())+"TOT",baseHist->GetTitle(),nBins,binLow,binUp);
+			 TH1D* newDMHist = new TH1D("newDMHist","",nBins,binLow,binUp);
+			 TH1D* newOverHist = new TH1D(TString(overHist->GetName())+"TOTover",baseHist->GetTitle(),nBins,binLow,binUp);
+			 TH1D* newDMHist2 = new TH1D("newDMHist2","",nBins,binLow,binUp);
+			 
+			 
+			 for(int iBin=0; iBin <= baseHist->GetNbinsX(); iBin++)
+			 {
+				newBaseHist->SetBinContent(iBin,baseHist->GetBinContent(iBin));
+				newBaseHist->SetBinError(iBin,baseHist->GetBinError(iBin));
+				newDMHist->SetBinContent(iBin,profileHist1[title_id][0]->GetBinContent(iBin));
+				newDMHist->SetBinError(iBin,profileHist1[title_id][0]->GetBinError(iBin));
+				newOverHist->SetBinContent(iBin,overHist->GetBinContent(iBin));
+				newOverHist->SetBinError(iBin,overHist->GetBinError(iBin));
+				newDMHist2->SetBinContent(iBin,profileHist1[title_id][1]->GetBinContent(iBin));
+				newDMHist2->SetBinError(iBin,profileHist1[title_id][1]->GetBinError(iBin));	
+				
+			 }
+			 newBaseHist->Multiply(newDMHist);
+			 newOverHist->Multiply(newDMHist2);
+			 baseHist=newBaseHist;
+			 overHist=newOverHist;
+			 delete newDMHist;
+			 delete newDMHist2;
+		 }
+	
+		 if(title_id==0) baseHist->GetXaxis()->SetRangeUser(0,100);
+		 baseHist->GetXaxis()->SetLabelOffset(0.1);		
+		 baseHist->GetXaxis()->SetTitle(XTitle[title_id]);
+		 baseHist->GetYaxis()->SetTitle("Fake rate");
+		 baseHist->SetMarkerStyle(20);
+		 baseHist->SetMarkerSize(2);
+		 baseHist->SetLineWidth(2);
+		 
+		 overHist->SetMarkerColor(kRed);
+		 overHist->SetMarkerStyle(25);
+		 overHist->SetMarkerSize(2);
+		 overHist->SetLineWidth(2);
+		 overHist->SetLineStyle(2);
+		 overHist->SetLineColor(kRed);
 		
-		 int binmax = profileHist1[iProf12][0]->GetMaximumBin();
-	     double max = 1.2*(profileHist1[iProf12][0]->GetBinContent(binmax)+profileHist1[iProf12][0]->GetBinError(binmax));
-	     int binmax2 = profileHist1[iProf12][1]->GetMaximumBin();
-	     double max2 = 1.2*(profileHist1[iProf12][1]->GetBinContent(binmax2)+profileHist1[iProf12][1]->GetBinError(binmax2));
+		 int binmax = baseHist->GetMaximumBin();
+	     double max = 1.2*(baseHist->GetBinContent(binmax)+baseHist->GetBinError(binmax));
+	     int binmax2 = overHist->GetMaximumBin();
+	     double max2 = 1.2*(overHist->GetBinContent(binmax2)+overHist->GetBinError(binmax2));
 	     max = max2 > max ? max2 : max;
 	 
-	     profileHist1[iProf12][0]->SetMaximum(10.0);
-	     profileHist1[iProf12][0]->SetMinimum(1e-3);
+	     baseHist->SetMaximum(10.0);
+	     baseHist->SetMinimum(1e-3);
 	     
 		 
 		 histPad->cd();	
 			 histPad->SetLogy();
-		 profileHist1[iProf12][0]->Draw();
-		 profileHist1[iProf12][1]->Draw("same");	
+		 baseHist->Draw();
+		 overHist->Draw("same");	
 		 
 		TLegend* leg = new TLegend(0.8,0.80,0.9,0.9,NULL,"brNDC");
 		leg->SetFillColor(0);
 		leg->SetTextSize(0.035);
 		leg->SetBorderSize(0);
 		
-		leg->AddEntry(profileHist1[iProf12][0], leg1, "lp");
-		leg->AddEntry(profileHist1[iProf12][1], leg2, "lp");
+		leg->AddEntry(baseHist, leg1, "lp");
+		leg->AddEntry(overHist, leg2, "lp");
 		
 		leg->Draw();
 		 //~ 
@@ -202,8 +235,8 @@ int CompareAllHistos(TString input1 = "../../QCD_ref.root", TString input2 = "..
 	
 	c1->Update();
 	
-	TH1D* h_diff=(TH1D*)profileHist1[iProf12][0]->Clone();
-	h_diff->Divide(profileHist1[iProf12][1]);
+	TH1D* h_diff=(TH1D*)baseHist->Clone();
+	h_diff->Divide(overHist);
 	diffPad->cd();
 	diffPad->SetGridy();
 	diffPad->SetGridx();
